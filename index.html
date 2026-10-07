@@ -1,0 +1,245 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+    <meta name="theme-color" content="#2c3e50">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="default">
+    <meta name="apple-mobile-web-app-title" content="MMU-G9 Ring">
+    <meta name="format-detection" content="telephone=no">
+    <title>MMU-G9 Ring Takip Sistemi</title>
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            color: #333;
+        }
+
+        .container {
+            width: 100%;
+            max-width: 900px;
+            padding: calc(20px + env(safe-area-inset-top)) calc(20px + env(safe-area-inset-right)) calc(20px + env(safe-area-inset-bottom)) calc(20px + env(safe-area-inset-left));
+            text-align: center;
+        }
+
+        h1 {
+            font-size: 1.8rem;
+            margin-bottom: 5px;
+            color: #2c3e50;
+        }
+
+        .status-info {
+            font-size: 1rem;
+            color: #7f8c8d;
+            margin-bottom: 25px;
+        }
+
+        .station-section {
+            margin-bottom: 30px;
+        }
+
+        .station-title {
+            font-size: 1.2rem;
+            font-weight: bold;
+            color: #34495e;
+            margin-bottom: 12px;
+            text-align: left;
+            border-left: 4px solid #3498db;
+            padding-left: 8px;
+        }
+
+        .rings-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 15px;
+        }
+
+        @media (max-width: 768px) {
+            .rings-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        .ring-box {
+            background: #ffffff;
+            padding: 20px;
+            min-height: 110px;
+            border-radius: 12px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.08);
+            transition: transform 0.2s ease;
+        }
+
+        .ring-box:hover {
+            transform: translateY(-3px);
+        }
+
+        .ring-name {
+            font-size: 1rem;
+            color: #7f8c8d;
+            margin-bottom: 8px;
+            font-weight: 600;
+        }
+
+        .ring-time {
+            font-size: 1.5rem;
+            font-weight: bold;
+            color: #2c3e50;
+        }
+
+        .ring-time span {
+            font-size: 0.9rem;
+            font-weight: normal;
+        }
+
+        .past {
+            color: #e74c3c !important;
+        }
+
+        .soon {
+            color: #e67e22 !important;
+        }
+
+        .normal {
+            color: #27ae60 !important;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <h1>Ring Kalkışına Kalan Süreler</h1>
+        <div class="status-info" id="statusInfo">Yükleniyor...</div>
+
+        <!-- Durak 1 -->
+        <div class="station-section">
+            <div class="station-title">MMU</div>
+            <div class="rings-grid">
+                <div class="ring-box">
+                    <div class="ring-name">Ring 1</div>
+                    <div class="ring-time" id="d1_r1">Hesaplanıyor...</div>
+                </div>
+                <div class="ring-box">
+                    <div class="ring-name">Ring 2</div>
+                    <div class="ring-time" id="d1_r2">Hesaplanıyor...</div>
+                </div>
+                <div class="ring-box">
+                    <div class="ring-name">Ring 3</div>
+                    <div class="ring-time" id="d1_r3">Hesaplanıyor...</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Durak 2 -->
+        <div class="station-section">
+            <div class="station-title">G9</div>
+            <div class="rings-grid">
+                <div class="ring-box">
+                    <div class="ring-name">Ring 1</div>
+                    <div class="ring-time" id="d2_r1">Hesaplanıyor...</div>
+                </div>
+                <div class="ring-box">
+                    <div class="ring-name">Ring 2</div>
+                    <div class="ring-time" id="d2_r2">Hesaplanıyor...</div>
+                </div>
+                <div class="ring-box">
+                    <div class="ring-name">Ring 3</div>
+                    <div class="ring-time" id="d2_r3">Hesaplanıyor...</div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const scheduleData = {
+            durak1: {
+                weekday: {
+                    ring1: ["08:23","08:33","08:43","08:53","09:03","09:13","09:23","09:33","09:43","09:53","10:03","10:13","10:23","10:33","10:43","10:53","11:03","11:13","11:23","11:33","11:43","11:53","12:03","12:13","12:23","12:33","12:43","12:53","13:03","13:13","13:23","13:33","13:43","13:53","14:03","14:13","14:23","14:33","14:43","14:53","15:03","15:13","15:23","15:33","15:43","15:53","16:03","16:13","16:23","16:33","16:43","16:53","17:03","17:13","17:53","18:23","18:53","19:23","19:53","20:23","20:53","21:23","21:53","22:23","22:53"],
+                    ring2: ["08:09","08:29","08:49","09:09","09:29","09:49","10:09","10:29","10:49","11:09","11:29","11:49","12:09","12:29","12:49","13:09","13:29","13:49","14:09","14:29","14:49","15:09","15:29","15:49","16:09","16:29","16:49"],
+                    ring3: ["08:24","08:44","09:04","09:24","09:44","10:04","10:24","10:44","11:04","11:24","11:44","12:04","12:24","12:44","13:04","13:24","13:44","14:04","14:24","14:44","15:04","15:24","15:44","16:04","16:24","16:44","16:59","17:44","18:14","18:44","19:14","19:44","20:14","20:44","21:14","21:44","22:14","22:44"]
+                },
+                weekend: {
+                    ring1: ["07:23","07:43","08:03","08:23","08:43","09:03","09:23","09:43","10:03","10:23","10:43","11:03","11:23","11:43","12:03","12:23","12:43","13:03","13:23","13:43","14:03","14:23","14:43","15:03","15:23","15:43","16:03","16:23","16:43","17:03","17:23","17:53","18:23","18:53","19:23","19:53","20:23","20:53","21:23","21:53","22:23","22:53"],
+                    ring2: ["07:09","07:49","08:29","09:09","09:49","10:29","11:09","11:49","12:29","13:09","13:49","14:29","15:09","15:49","16:29"],
+                    ring3: ["07:34","08:14","08:54","09:34","10:14","10:54","11:34","12:14","12:54","13:34","14:14","14:54","15:34","16:14","16:54","17:14","17:44","18:14","18:44","19:14","19:44","20:14","20:44","21:14","21:44","22:14","22:44"]
+                }
+            },
+            durak2: {
+                weekday: {
+                    ring1: ["08:00","08:10","08:20","08:30","08:40","08:50","09:00","09:10","09:20","09:30","09:40","09:50","10:00","10:10","10:20","10:30","10:40","10:50","11:00","11:10","11:20","11:30","11:40","11:50","12:00","12:10","12:20","12:30","12:40","12:50","13:00","13:10","13:20","13:30","13:40","13:50","14:00","14:10","14:20","14:30","14:40","14:50","15:00","15:10","15:20","15:30","15:40","15:50","16:00","16:10","16:20","16:30","16:40","16:50","17:30","18:00","18:30","19:00","19:30","20:00","20:30","21:00","21:30","22:00","22:30"],
+                    ring2: ["08:11","08:31","08:51","09:11","09:31","09:51","10:11","10:31","10:51","11:11","11:31","11:51","12:11","12:31","12:51","13:11","13:31","13:51","14:11","14:31","14:51","15:11","15:31","15:51","16:11","16:31","16:51"],
+                    ring3: ["08:26","08:46","09:06","09:26","09:46","10:06","10:26","10:46","11:06","11:26","11:46","12:06","12:26","12:46","13:06","13:26","13:46","14:06","14:26","14:46","15:06","15:26","15:46","16:06","16:26","16:46","17:06","17:46","18:16","18:46","19:16","19:46","20:16","20:46","21:16","21:46","22:16","22:46"]
+                },
+                weekend: {
+                    ring1: ["07:00","07:20","07:40","08:00","08:20","08:40","09:00","09:20","09:40","10:00","10:20","10:40","11:00","11:20","11:40","12:00","12:20","12:40","13:00","13:20","13:40","14:00","14:20","14:40","15:00","15:20","15:40","16:00","16:20","16:40","17:00","17:30","18:00","18:30","19:00","19:30","20:00","20:30","21:00","21:30","22:00","22:30"],
+                    ring2: ["07:11","07:51","08:31","09:11","09:51","10:31","11:11","11:51","12:31","13:11","13:51","14:31","15:11","15:51","16:31"],
+                    ring3: ["07:36","08:16","08:56","09:36","10:16","10:56","11:36","12:16","12:56","13:36","14:16","14:56","15:36","16:16","16:56","17:16","17:46","18:16","18:46","19:16","19:46","20:16","20:46","21:16","21:46","22:16","22:46"]
+                }
+            }
+        };
+
+        function timeToMinutes(timeStr) {
+            const [hours, minutes] = timeStr.split(':').map(Number);
+            return hours * 60 + minutes;
+        }
+
+        function getNextBusInfo(scheduleList, currentMinutes) {
+            for (let timeStr of scheduleList) {
+                const busMinutes = timeToMinutes(timeStr);
+                const diff = busMinutes - currentMinutes;
+                if (diff >= 0) {
+                    return { text: `${diff} dk`, class: diff <= 5 ? 'soon' : 'normal', rawMinutes: diff };
+                }
+            }
+            return { text: "Bugün Sefer Bitti", class: 'past', rawMinutes: 9999 };
+        }
+
+        function updateBusTimes() {
+            const now = new Date();
+            const day = now.getDay(); // 0: Pazar, 6: Cumartesi
+            const isWeekend = (day === 0 || day === 6);
+            const currentMinutes = now.getHours() * 60 + now.getMinutes();
+
+            const dayType = isWeekend ? 'weekend' : 'weekday';
+            const dayNameStr = isWeekend ? 'Hafta Sonu' : 'Hafta İçi';
+
+            document.getElementById('statusInfo').innerText = 
+                `Bugün: ${dayNameStr} | Saat: ${String(now.getHours()).padStart(2, '0')}:${String(now.getMinutes()).padStart(2, '0')}`;
+
+            // Durak 1 Hesaplamaları
+            const d1 = scheduleData.durak1[dayType];
+            const d1_r1_info = getNextBusInfo(d1.ring1, currentMinutes);
+            const d1_r2_info = getNextBusInfo(d1.ring2, currentMinutes);
+            const d1_r3_info = getNextBusInfo(d1.ring3, currentMinutes);
+
+            document.getElementById('d1_r1').innerHTML = `<span class="${d1_r1_info.class}">${d1_r1_info.text}</span>`;
+            document.getElementById('d1_r2').innerHTML = `<span class="${d1_r2_info.class}">${d1_r2_info.text}</span>`;
+            document.getElementById('d1_r3').innerHTML = `<span class="${d1_r3_info.class}">${d1_r3_info.text}</span>`;
+
+            // Durak 2 Hesaplamaları
+            const d2 = scheduleData.durak2[dayType];
+            const d2_r1_info = getNextBusInfo(d2.ring1, currentMinutes);
+            const d2_r2_info = getNextBusInfo(d2.ring2, currentMinutes);
+            const d2_r3_info = getNextBusInfo(d2.ring3, currentMinutes);
+
+            document.getElementById('d2_r1').innerHTML = `<span class="${d2_r1_info.class}">${d2_r1_info.text}</span>`;
+            document.getElementById('d2_r2').innerHTML = `<span class="${d2_r2_info.class}">${d2_r2_info.text}</span>`;
+            document.getElementById('d2_r3').innerHTML = `<span class="${d2_r3_info.class}">${d2_r3_info.text}</span>`;
+        }
+
+        // Sayfa yüklendiğinde çalıştır ve her 30 saniyede bir güncelle
+        updateBusTimes();
+        setInterval(updateBusTimes, 30000);
+    </script>
+</body>
+</html>
